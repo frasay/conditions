@@ -4,257 +4,293 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#c4dbe9">
-<title>Summer Conditions Console</title>
+<meta name="theme-color" content="#1a1613">
+<title>Summer Water Conditions</title>
 <style>
   :root{
-    --page:#c4dbe9;
-    --body1:#dcebf4;
-    --body2:#c9e0ee;
-    --recess:#c8deec;
-    --lo:rgba(62,104,134,.38);
-    --hi:rgba(255,255,255,.92);
-    --ink:#15303f;
-    --body-ink:#2a4556;
-    --mute:#4a6677;
-    --red:#d62f25;
-    --red-hi:#ff5a49;
-    --red-dk:#a91e16;
-    --red-ink:#b3231a;
-    --cyan:#58c3ee;
+    --ivory:#f3e9cc;
+    --ivory-mute:#c9ba8f;
+    --amber:#ffb84d;
+    --amber-soft:#ffd36b;
+    --red:#e23b2b;
+    --red-hi:#ff6a52;
+    --red-dk:#8e1b12;
+    --warn:#ff8a73;
     --font:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --serif:Georgia,"Times New Roman",serif;
     --spring:cubic-bezier(.3,1.5,.5,1);
+    --brass:linear-gradient(135deg,#f6e3a1,#d4aa4a 28%,#8f6a1c 52%,#ecd283 74%,#b28a2e);
+    --chrome:conic-gradient(from 25deg,#fff,#9aa2a6,#f4f6f7,#7d858a,#e9edef,#9aa2a6,#fff);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{margin:0;height:100%;overflow:hidden;background:var(--page);font-family:var(--font);color:var(--ink);
+  html,body{margin:0;height:100%;overflow:hidden;font-family:var(--font);color:var(--ivory);
+    background:radial-gradient(ellipse at 50% 28%,#3b342d 0%,#1d1915 58%,#0c0a08 100%);
     -webkit-text-size-adjust:100%;touch-action:manipulation;-webkit-user-select:none;user-select:none}
   button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}
   a{color:inherit}
   :focus{outline:none}
-  :focus-visible{outline:2px solid var(--red);outline-offset:4px;border-radius:12px}
+  :focus-visible{outline:2px solid var(--amber-soft);outline-offset:4px;border-radius:12px}
   .stage{position:fixed;inset:0;overflow:hidden}
+  .defs{position:absolute;width:0;height:0;overflow:hidden}
 
-  /* ---------- Console body ---------- */
-  .console{position:absolute;left:50%;top:50%;transform-origin:50% 50%;border-radius:34px;display:grid;
-    background:linear-gradient(160deg,var(--body1),var(--body2));
-    box-shadow:30px 38px 64px rgba(62,104,134,.34),-14px -14px 34px rgba(255,255,255,.85),inset 1px 1px 0 rgba(255,255,255,.95);
+  /* ---------- Console body: mahogany veneer with brass edging ---------- */
+  .console{position:absolute;left:50%;top:50%;transform-origin:50% 50%;border-radius:20px;display:grid;
+    background-color:#4a2010;background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxMTQwJyBoZWlnaHQ9JzEzMzAnPgo8ZmlsdGVyIGlkPSd3JyB4PScwJyB5PScwJyB3aWR0aD0nMTAwJScgaGVpZ2h0PScxMDAlJyBjb2xvci1pbnRlcnBvbGF0aW9uLWZpbHRlcnM9J3NSR0InPgogIDxmZVR1cmJ1bGVuY2UgdHlwZT0nZnJhY3RhbE5vaXNlJyBiYXNlRnJlcXVlbmN5PScwLjAwNDIgMC4wODUnIG51bU9jdGF2ZXM9JzMnIHNlZWQ9JzcnIHJlc3VsdD0nbicvPgogIDxmZUNvbG9yTWF0cml4IGluPSduJyB0eXBlPSdtYXRyaXgnIHZhbHVlcz0nMS45IDAgMCAwIC0wLjQ1ICAxLjkgMCAwIDAgLTAuNDUgIDEuOSAwIDAgMCAtMC40NSAgMCAwIDAgMCAxJyByZXN1bHQ9J2cxJy8+CiAgCiAgPGZlQ29sb3JNYXRyaXggaW49J2cxJyB0eXBlPSdtYXRyaXgnIHZhbHVlcz0nMSAwIDAgMCAwICAxIDAgMCAwIDAgIDEgMCAwIDAgMCAgMCAwIDAgMSAwJyByZXN1bHQ9J2dnJy8+CiAgPGZlQ29tcG9uZW50VHJhbnNmZXIgaW49J2dnJyByZXN1bHQ9J3RpbnQnPgogICAgPGZlRnVuY1IgdHlwZT0nbGluZWFyJyBzbG9wZT0nMC4zNjA4JyBpbnRlcmNlcHQ9JzAuMTgwNCcvPgogICAgPGZlRnVuY0cgdHlwZT0nbGluZWFyJyBzbG9wZT0nMC4yMDAwJyBpbnRlcmNlcHQ9JzAuMDc0NScvPgogICAgPGZlRnVuY0IgdHlwZT0nbGluZWFyJyBzbG9wZT0nMC4xMDU5JyBpbnRlcmNlcHQ9JzAuMDM1MycvPgogICAgPGZlRnVuY0EgdHlwZT0nbGluZWFyJyBzbG9wZT0nMCcgaW50ZXJjZXB0PScxJy8+CiAgPC9mZUNvbXBvbmVudFRyYW5zZmVyPgogIAogIDxmZVR1cmJ1bGVuY2UgdHlwZT0nZnJhY3RhbE5vaXNlJyBiYXNlRnJlcXVlbmN5PScwLjAxMiAwLjc1JyBudW1PY3RhdmVzPScyJyBzZWVkPScxOCcgcmVzdWx0PSdwJy8+CiAgPGZlQ29sb3JNYXRyaXggaW49J3AnIHR5cGU9J21hdHJpeCcgdmFsdWVzPScwIDAgMCAwIDAgIDAgMCAwIDAgMCAgMCAwIDAgMCAwICAwIDAgMCAtMS43IDEuMDUnIHJlc3VsdD0ncGEnLz4KICA8ZmVDb21wb3NpdGUgaW49J3RpbnQnIGluMj0ncGEnIG9wZXJhdG9yPSdpbicgcmVzdWx0PSdwZCcvPgogIDxmZUJsZW5kIGluPSd0aW50JyBpbjI9J3BkJyBtb2RlPSdtdWx0aXBseScgcmVzdWx0PSdmaW4nLz4KPC9maWx0ZXI+CjxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlcj0ndXJsKCN3KScvPjwvc3ZnPg==");background-repeat:no-repeat;background-size:1140px 1330px;background-position:0 0;
+    box-shadow:0 0 0 3px #caa247,0 0 0 5px #6b4d12,0 0 0 7px #2a1a08,0 44px 90px rgba(0,0,0,.7),
+      inset 0 0 0 1px rgba(255,235,190,.28),inset 0 2px 3px rgba(255,255,255,.2);
     visibility:hidden}
   .console.ready{visibility:visible}
-  .console.land{width:1120px;height:680px;padding:32px;gap:28px;grid-template-columns:548px 1fr;--m:28px}
-  .console.port{width:640px;height:1240px;padding:28px;gap:28px;grid-template-rows:600px 1fr;--m:24px}
+  .console::before{content:"";position:absolute;inset:0;border-radius:20px;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(ellipse 70% 40% at 22% 0%,rgba(255,226,180,.30),transparent 70%),
+      linear-gradient(104deg,rgba(255,255,255,.17) 0%,rgba(255,255,255,.03) 24%,rgba(255,255,255,0) 38%,rgba(255,255,255,.07) 64%,rgba(255,255,255,0) 82%)}
+  .console::after{content:"";position:absolute;inset:11px;border-radius:12px;pointer-events:none;z-index:0;
+    border:1px solid rgba(236,205,120,.45);box-shadow:0 0 0 1px rgba(40,20,5,.35)}
+  .console.land{width:1140px;height:700px;padding:28px;gap:22px;grid-template-columns:540px 1fr;--m:24px}
+  .console.port{width:640px;height:1330px;padding:26px;gap:22px;grid-template-rows:624px 1fr;--m:24px}
+  .screw{position:absolute;width:13px;height:13px;border-radius:50%;z-index:4;pointer-events:none;
+    background:radial-gradient(circle at 35% 30%,#fff2b8,#d5aa45 46%,#7a5a15);
+    box-shadow:0 1px 2px rgba(0,0,0,.65),inset 0 0 0 1px rgba(80,50,5,.5)}
+  .screw::after{content:"";position:absolute;left:2px;right:2px;top:50%;height:2px;margin-top:-1px;background:#4a3208;
+    transform:rotate(var(--r,35deg));box-shadow:0 1px 0 rgba(255,240,180,.5)}
+  .screw.tl{left:11px;top:11px;--r:30deg}.screw.tr{right:11px;top:11px;--r:-20deg}
+  .screw.bl{left:11px;bottom:11px;--r:70deg}.screw.br{right:11px;bottom:11px;--r:10deg}
 
-  /* ---------- Speaker (grille, display, day strip) ---------- */
-  .speaker{position:relative;border-radius:24px;overflow:hidden;background:#cfe3ef;
-    box-shadow:inset 7px 9px 18px rgba(62,104,134,.40),inset -7px -7px 16px rgba(255,255,255,.95)}
-  .grille{position:absolute;inset:0;
-    background-image:
-      radial-gradient(circle at 50% 50%,rgba(70,108,135,.55) 0 2.3px,transparent 3px),
-      radial-gradient(circle at 50% 50%,rgba(255,255,255,.95) 0 2.3px,transparent 3px);
-    background-size:15px 15px,15px 15px;background-position:0 0,1.3px 1.5px}
-  .display{position:absolute;left:var(--m);right:var(--m);top:var(--m);bottom:calc(var(--m) + 100px);
-    border-radius:20px;padding:20px 26px 16px;overflow:hidden;display:flex;flex-direction:column;
-    background:linear-gradient(145deg,#f7fbfe,#e8f3f9);
-    box-shadow:12px 16px 30px rgba(62,104,134,.40),-6px -6px 16px rgba(255,255,255,.75),inset 1px 1px 0 #fff}
-  .d-top{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);font-variant-numeric:tabular-nums}
-  .place{margin:8px 0 0;font-size:34px;line-height:1.05;letter-spacing:-.02em;font-weight:600}
-  .sub{margin:3px 0 0;font-size:13.5px;color:var(--mute)}
-  .verdict{margin-top:12px}
-  .lamps{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
-  .lamp{display:inline-flex;align-items:center;gap:8px;font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
-  .lamp i{width:17px;height:17px;border-radius:50%;background:#c3d8e6;
-    box-shadow:inset 2px 2px 4px rgba(62,104,134,.45),inset -1px -1px 2px rgba(255,255,255,.9);transition:background .3s,box-shadow .3s}
-  .lamp.on{color:var(--ink)}
-  .lamp.ok.on i{background:radial-gradient(circle at 35% 30%,#fff,#e9f7ff 55%,#bfe6f8);
-    box-shadow:0 0 0 1.5px #fff,0 0 12px 4px rgba(88,195,238,.75),inset 0 0 3px rgba(88,195,238,.5)}
-  .lamp.care.on i{background:radial-gradient(circle at 35% 30%,#ffd1cb,#ff8b7d 60%,#f0594a);
-    box-shadow:0 0 10px 3px rgba(240,89,74,.45)}
-  .lamp.no.on i{background:radial-gradient(circle at 35% 30%,#ff8878,var(--red) 55%,var(--red-dk));
-    box-shadow:0 0 12px 4px rgba(214,47,37,.6)}
-  .head{margin:10px 0 0;font-size:21px;line-height:1.2;font-weight:600;letter-spacing:-.01em;min-height:25px}
-  .head.bad{color:var(--red-ink)}
-  .win{margin:4px 0 0;font-size:14.5px;line-height:1.35;color:var(--body-ink)}
-  .gauges{margin:auto 0;padding:10px 0 6px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  /* ---------- Instrument cluster (left) ---------- */
+  .speaker{position:relative;z-index:1;border-radius:16px;padding:7px;background:var(--brass);
+    box-shadow:0 12px 26px rgba(0,0,0,.6),inset 0 1px 1px rgba(255,255,255,.75),0 0 0 1px rgba(60,35,5,.6)}
+  .cluster{position:relative;width:100%;height:100%;border-radius:11px;overflow:hidden;
+    background:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScyMjAnIGhlaWdodD0nMjIwJz48ZmlsdGVyIGlkPSd2JyB4PScwJyB5PScwJyB3aWR0aD0nMTAwJScgaGVpZ2h0PScxMDAlJz48ZmVUdXJidWxlbmNlIHR5cGU9J2ZyYWN0YWxOb2lzZScgYmFzZUZyZXF1ZW5jeT0nMC44NScgbnVtT2N0YXZlcz0nMicgc2VlZD0nNCcvPjxmZUNvbG9yTWF0cml4IHZhbHVlcz0nMCAwIDAgMCAxICAwIDAgMCAwIDEgIDAgMCAwIDAgMSAgMCAwIDAgLjUgLS4xNycvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlcj0ndXJsKCN2KScvPjwvc3ZnPg=="),radial-gradient(ellipse at 28% 0%,#2a2520,#0d0b09 75%);background-color:#0d0b09;
+    box-shadow:inset 6px 8px 20px rgba(0,0,0,.9),inset -2px -2px 6px rgba(255,255,255,.05)}
+  .cluster::after{content:"";position:absolute;inset:8px;border:1.5px dashed rgba(220,196,140,.26);border-radius:8px;pointer-events:none}
+
+  .display{position:absolute;left:var(--m);right:var(--m);top:calc(var(--m) - 4px);bottom:calc(var(--m) + 98px);
+    display:flex;flex-direction:column;overflow:hidden;color:var(--ivory)}
+  .d-top{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ivory-mute);font-variant-numeric:tabular-nums}
+  .place{margin:6px 0 0;font-family:var(--serif);font-size:35px;line-height:1.05;letter-spacing:-.01em;font-weight:700;color:var(--ivory)}
+  .sub{margin:3px 0 0;font-size:13.5px;color:var(--ivory-mute)}
+  .verdict{margin-top:11px}
+  .lamps{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  .lamp{display:inline-flex;align-items:center;gap:9px;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#8d815f;transition:color .3s}
+  .lamp i{width:20px;height:20px;border-radius:50%;transition:background .3s,box-shadow .3s;
+    box-shadow:0 0 0 2px #c9ced1,0 0 0 3.5px #5e666b,inset 0 3px 5px rgba(0,0,0,.65)}
+  .lamp.ok i{background:radial-gradient(circle at 35% 30%,#2f6a47,#143222)}
+  .lamp.care i{background:radial-gradient(circle at 35% 30%,#7a5617,#3a290a)}
+  .lamp.no i{background:radial-gradient(circle at 35% 30%,#8a2a20,#3d100b)}
+  .lamp.on{color:var(--ivory)}
+  .lamp.ok.on i{background:radial-gradient(circle at 35% 30%,#d6ffe6,#42dd88 55%,#1f9c57);
+    box-shadow:0 0 0 2px #c9ced1,0 0 0 3.5px #5e666b,0 0 14px 5px rgba(66,221,136,.6),inset 0 0 4px rgba(255,255,255,.6)}
+  .lamp.care.on i{background:radial-gradient(circle at 35% 30%,#fff0c4,#ffb52e 55%,#d98708);
+    box-shadow:0 0 0 2px #c9ced1,0 0 0 3.5px #5e666b,0 0 14px 5px rgba(255,181,46,.6),inset 0 0 4px rgba(255,255,255,.6)}
+  .lamp.no.on i{background:radial-gradient(circle at 35% 30%,#ffd0c8,#ff4a38 55%,#c4220f);
+    box-shadow:0 0 0 2px #c9ced1,0 0 0 3.5px #5e666b,0 0 14px 5px rgba(255,74,56,.65),inset 0 0 4px rgba(255,255,255,.55)}
+  .head{margin:10px 0 0;font-size:21px;line-height:1.2;font-weight:600;letter-spacing:-.01em;min-height:25px;color:var(--ivory)}
+  .head.bad{color:var(--warn)}
+  .win{margin:4px 0 0;font-size:14.5px;line-height:1.35;color:var(--amber-soft)}
+  .gauges{margin:auto 0;padding:8px 0 4px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
   .g{text-align:center;transition:opacity .3s}
-  .g.off{opacity:.55}
-  .g svg{display:block;width:100%;height:auto;overflow:visible}
-  .g .nd{transform-origin:60px 58px;transition:transform .85s cubic-bezier(.25,1.35,.5,1)}
-  .gv{margin-top:-4px;font-size:12px;color:var(--mute);line-height:1.1;min-height:23px}
-  .gv b{font-size:20px;font-weight:600;color:var(--ink);letter-spacing:-.02em;margin-right:3px;font-variant-numeric:tabular-nums}
-  .gl{margin-top:2px;font-size:10.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
-  .foot{padding-top:8px;border-top:1px solid #cfdfe9;font-size:12.5px;line-height:1.35;color:var(--body-ink)}
+  .g.off{opacity:.6}
+  .g svg{display:block;width:100%;height:auto;overflow:visible;font-family:var(--font)}
+  .g .nd{transform-box:view-box;transform-origin:60px 60px;transition:transform .85s cubic-bezier(.25,1.35,.5,1)}
+  .gv{margin-top:1px;font-size:12px;color:var(--ivory-mute);line-height:1.1;min-height:23px}
+  .gv b{font-size:20px;font-weight:600;color:var(--ivory);letter-spacing:-.02em;margin-right:3px;font-variant-numeric:tabular-nums}
+  .gl{margin-top:2px;font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--amber-soft)}
+  .foot{padding-top:8px;border-top:1px solid rgba(214,177,82,.45);font-size:12.5px;line-height:1.38;color:var(--ivory)}
   .foot p{margin:0}
-  .foot p + p{color:var(--mute)}
-  .foot .warn{color:var(--red-ink);font-weight:600}
+  .foot p + p{color:var(--ivory-mute)}
+  .foot .warn{color:var(--warn);font-weight:600}
+  .foot #fC{color:var(--amber-soft)}
+  .foot #fC:empty{display:none}
 
-  /* Day strip (the tuner) */
-  .tuner{position:absolute;left:var(--m);right:var(--m);bottom:var(--m);height:84px;border-radius:14px;padding:12px 18px 0;
-    background:#c9deec;box-shadow:inset 4px 5px 10px rgba(62,104,134,.36),inset -4px -4px 9px rgba(255,255,255,.9)}
+  /* Day strip: a row of lens lamps in a brass-rimmed trough */
+  .tuner{position:absolute;left:var(--m);right:var(--m);bottom:var(--m);height:84px;border-radius:10px;padding:12px 14px 0;background:#080605;
+    box-shadow:inset 0 3px 8px rgba(0,0,0,.95),0 0 0 2px #b8932f,0 0 0 3.5px #5a430f,0 2px 0 3.5px rgba(255,235,170,.3)}
   .strip{position:relative;display:flex;gap:4px;height:34px}
-  .hr{flex:1;border-radius:5px;background:#bcd3e2;transition:background .3s,box-shadow .3s,opacity .3s}
-  .hr.ok{background:linear-gradient(#fff,#eef9ff);box-shadow:0 0 0 1px #fff,0 0 9px 2px rgba(88,195,238,.65)}
-  .hr.cr{background:#f4a89f}
-  .hr.no{background:var(--red)}
-  .hr.dk{background:repeating-linear-gradient(135deg,#bcd3e2 0 3px,#c9deec 3px 6px);opacity:.7}
-  .hr.un{background:#bcd3e2;box-shadow:inset 0 0 0 1px #a9c3d4}
+  .hr{flex:1;border-radius:4px;background:#2b2722;transition:background .3s,box-shadow .3s,opacity .3s;
+    box-shadow:inset 0 1px 1px rgba(255,255,255,.08),inset 0 -2px 3px rgba(0,0,0,.6)}
+  .hr.ok{background:linear-gradient(#b4ffd2,#34d27a);box-shadow:0 0 9px 2px rgba(60,230,130,.55),inset 0 1px 1px rgba(255,255,255,.65)}
+  .hr.lt{background:#1c3a2a;box-shadow:inset 0 0 0 1px #3f7a58}
+  .hr.cr{background:linear-gradient(#ffe0a0,#f0a31c);box-shadow:0 0 8px 1px rgba(255,181,46,.5),inset 0 1px 1px rgba(255,255,255,.6)}
+  .hr.no{background:linear-gradient(#ff8c7d,#d92a1a);box-shadow:0 0 8px 1px rgba(255,74,56,.5),inset 0 1px 1px rgba(255,255,255,.5)}
+  .hr.dk{background:repeating-linear-gradient(135deg,#171310 0 3px,#221d19 3px 6px);opacity:.85}
+  .hr.un{background:#2b2722}
   .hr.past{opacity:.38}
-  .hr.win{outline:2px solid var(--ink);outline-offset:2px}
-  .needle{position:absolute;top:-6px;bottom:-5px;width:2px;margin-left:-1px;border-radius:1px;background:var(--red);
-    transition:left .5s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 6px rgba(214,47,37,.55);pointer-events:none}
+  .hr.win{outline:2px solid var(--ivory);outline-offset:2px}
+  .needle{position:absolute;top:-7px;bottom:-5px;width:2px;margin-left:-1px;border-radius:1px;background:#ff5238;
+    transition:left .5s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 7px rgba(255,82,56,.8);pointer-events:none}
   .needle[hidden]{display:none}
-  .slab-row{position:relative;height:16px;margin-top:9px;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+  .slab-row{position:relative;height:16px;margin-top:9px;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ivory-mute)}
   .slab-row span{position:absolute;top:0;transform:translateX(-50%);font-variant-numeric:tabular-nums;white-space:nowrap}
   .slab-row span:first-child{transform:none}
   .slab-row span:last-child{left:auto !important;right:0;transform:none}
 
-  /* ---------- Controls ---------- */
-  .controls{display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+  /* ---------- Controls panel (right): a second veneer panel ---------- */
+  .controls{position:relative;z-index:1;border-radius:16px;padding:15px 18px 13px;display:flex;flex-direction:column;justify-content:space-between;min-width:0;
+    background-color:#5a2a14;background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc3MDAnIGhlaWdodD0nNzAwJz4KPGZpbHRlciBpZD0ndycgeD0nMCcgeT0nMCcgd2lkdGg9JzEwMCUnIGhlaWdodD0nMTAwJScgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSdzUkdCJz4KICA8ZmVUdXJidWxlbmNlIHR5cGU9J2ZyYWN0YWxOb2lzZScgYmFzZUZyZXF1ZW5jeT0nMC4wMDQ1IDAuMDk1JyBudW1PY3RhdmVzPSczJyBzZWVkPScxMicgcmVzdWx0PSduJy8+CiAgPGZlQ29sb3JNYXRyaXggaW49J24nIHR5cGU9J21hdHJpeCcgdmFsdWVzPScxLjkgMCAwIDAgLTAuNDUgIDEuOSAwIDAgMCAtMC40NSAgMS45IDAgMCAwIC0wLjQ1ICAwIDAgMCAwIDEnIHJlc3VsdD0nZzEnLz4KICAKICA8ZmVDb2xvck1hdHJpeCBpbj0nZzEnIHR5cGU9J21hdHJpeCcgdmFsdWVzPScxIDAgMCAwIDAgIDEgMCAwIDAgMCAgMSAwIDAgMCAwICAwIDAgMCAxIDAnIHJlc3VsdD0nZ2cnLz4KICA8ZmVDb21wb25lbnRUcmFuc2ZlciBpbj0nZ2cnIHJlc3VsdD0ndGludCc+CiAgICA8ZmVGdW5jUiB0eXBlPSdsaW5lYXInIHNsb3BlPScwLjM4NDMnIGludGVyY2VwdD0nMC4yNDMxJy8+CiAgICA8ZmVGdW5jRyB0eXBlPSdsaW5lYXInIHNsb3BlPScwLjIyNzUnIGludGVyY2VwdD0nMC4xMDIwJy8+CiAgICA8ZmVGdW5jQiB0eXBlPSdsaW5lYXInIHNsb3BlPScwLjEyNTUnIGludGVyY2VwdD0nMC4wNDcxJy8+CiAgICA8ZmVGdW5jQSB0eXBlPSdsaW5lYXInIHNsb3BlPScwJyBpbnRlcmNlcHQ9JzEnLz4KICA8L2ZlQ29tcG9uZW50VHJhbnNmZXI+CiAgCiAgPGZlVHVyYnVsZW5jZSB0eXBlPSdmcmFjdGFsTm9pc2UnIGJhc2VGcmVxdWVuY3k9JzAuMDEyIDAuNzUnIG51bU9jdGF2ZXM9JzInIHNlZWQ9JzIzJyByZXN1bHQ9J3AnLz4KICA8ZmVDb2xvck1hdHJpeCBpbj0ncCcgdHlwZT0nbWF0cml4JyB2YWx1ZXM9JzAgMCAwIDAgMCAgMCAwIDAgMCAwICAwIDAgMCAwIDAgIDAgMCAwIC0xLjcgMS4wNScgcmVzdWx0PSdwYScvPgogIDxmZUNvbXBvc2l0ZSBpbj0ndGludCcgaW4yPSdwYScgb3BlcmF0b3I9J2luJyByZXN1bHQ9J3BkJy8+CiAgPGZlQmxlbmQgaW49J3RpbnQnIGluMj0ncGQnIG1vZGU9J211bHRpcGx5JyByZXN1bHQ9J2ZpbicvPgo8L2ZpbHRlcj4KPHJlY3Qgd2lkdGg9JzEwMCUnIGhlaWdodD0nMTAwJScgZmlsdGVyPSd1cmwoI3cpJy8+PC9zdmc+");background-repeat:no-repeat;background-size:100% 100%;
+    box-shadow:0 0 0 2px #c29d3f,0 0 0 3.5px #5c430f,0 12px 26px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,235,180,.22),inset 5px 7px 16px rgba(0,0,0,.4)}
+  .controls::before{content:"";position:absolute;inset:0;border-radius:16px;pointer-events:none;z-index:0;
+    background:radial-gradient(ellipse 80% 38% at 30% 0%,rgba(255,226,180,.22),transparent 70%),
+      linear-gradient(100deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,0) 30%,rgba(255,255,255,.05) 62%,rgba(255,255,255,0) 80%)}
+  .controls > *{position:relative;z-index:1}
   .top{display:flex;align-items:center;justify-content:space-between;height:36px}
-  .brand{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;letter-spacing:-.01em}
-  .brand small{font-size:10px;font-weight:500;letter-spacing:.2em;color:var(--mute);text-transform:uppercase;padding-top:2px}
-  .led{width:9px;height:9px;border-radius:50%;background:#aac3d3;box-shadow:inset 1px 1px 2px rgba(0,0,0,.25),0 1px 0 #fff;transition:all .2s}
-  .led.on{background:var(--red);box-shadow:0 0 9px 2px rgba(214,47,37,.6)}
-  .sound{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;
-    background:linear-gradient(145deg,#eef6fb,#cfe2ee);box-shadow:4px 5px 10px var(--lo),-3px -3px 8px var(--hi);transition:box-shadow .12s,transform .12s}
-  .sound:active{transform:scale(.96);box-shadow:inset 3px 3px 6px var(--lo),inset -3px -3px 6px var(--hi)}
-  .sound svg{width:18px;height:18px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .brand{display:flex;align-items:center;gap:11px}
+  .led{width:11px;height:11px;border-radius:50%;background:#4a3410;box-shadow:0 0 0 1.5px #c9ced1,0 0 0 3px #5e666b,inset 0 2px 3px rgba(0,0,0,.7);transition:all .2s}
+  .led.on{background:radial-gradient(circle at 35% 30%,#fff0c4,#ffb52e 55%,#d98708);box-shadow:0 0 0 1.5px #c9ced1,0 0 0 3px #5e666b,0 0 11px 4px rgba(255,181,46,.7)}
+  .plate{position:relative;padding:7px 14px 6px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#2b1b05;
+    background:var(--brass);text-shadow:0 1px 0 rgba(255,245,200,.6);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -1px 0 rgba(90,60,5,.5),0 2px 5px rgba(0,0,0,.55)}
+  .plate small{font-size:10px;font-weight:600;letter-spacing:.2em;margin-left:8px;opacity:.75}
+  .sound{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--chrome);
+    box-shadow:3px 5px 9px rgba(0,0,0,.6),inset 0 0 0 2px rgba(0,0,0,.18);transition:box-shadow .12s,transform .12s}
+  .sound:active{transform:scale(.95);box-shadow:1px 2px 4px rgba(0,0,0,.6),inset 0 0 0 2px rgba(0,0,0,.3),inset 2px 3px 6px rgba(0,0,0,.35)}
+  .sound svg{width:18px;height:18px;stroke:#1c140b;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
   .sound .off{display:none}
   .sound[aria-pressed="true"] .on{display:none}
   .sound[aria-pressed="true"] .off{display:block}
 
-  .lab{font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);margin-bottom:6px}
-  .dials{display:grid;grid-template-columns:250px 1fr;gap:12px;align-items:start}
+  .lab{font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ivory);margin-bottom:5px;text-shadow:0 1px 2px rgba(0,0,0,.7)}
+  .dials{display:grid;grid-template-columns:260px 1fr;gap:12px;align-items:start}
   .col{display:flex;flex-direction:column;align-items:center}
-
   .dial{position:relative;touch-action:none}
-  .dial.act{width:250px;height:250px}
-  .dial.reg{width:208px;height:208px}
+  .dial.act{width:260px;height:260px}
+  .dial.reg{width:200px;height:200px}
+  .well{position:absolute;left:50%;top:50%;border-radius:50%;
+    background:radial-gradient(circle at 50% 40%,#1d1814,#070605 72%);
+    box-shadow:0 0 0 5px #c9a13f,0 0 0 7px #6c4e12,0 0 0 8px rgba(255,235,170,.35),inset 4px 6px 14px rgba(0,0,0,.9),0 9px 16px rgba(0,0,0,.55)}
+  .act .well{width:160px;height:160px;margin:-80px 0 0 -80px}
+  .reg .well{width:150px;height:150px;margin:-75px 0 0 -75px}
+  .skirt{position:absolute;left:50%;top:50%;border-radius:50%;background:var(--chrome);pointer-events:none;box-shadow:0 6px 12px rgba(0,0,0,.6),inset 0 0 0 1px rgba(0,0,0,.25)}
+  .act .skirt{width:134px;height:134px;margin:-67px 0 0 -67px}
+  .reg .skirt{width:112px;height:112px;margin:-56px 0 0 -56px}
   .knob{position:absolute;left:50%;top:50%;border-radius:50%;cursor:grab;touch-action:none;
-    background:linear-gradient(145deg,#f7fbfe,#d2e4f0);
-    box-shadow:12px 16px 28px rgba(62,104,134,.45),-8px -8px 18px rgba(255,255,255,.95),inset 1px 1px 1px #fff;
+    background:radial-gradient(circle at 50% 50%,#eef1f2 0 11px,#8b9398 12px 13.5px,transparent 14.5px),
+      radial-gradient(circle at 34% 26%,#555,#1d1d1d 42%,#060606 100%);
+    box-shadow:0 0 0 1.5px #aeb5b9,7px 11px 18px rgba(0,0,0,.65),inset 0 1px 2px rgba(255,255,255,.25);
     transition:transform .17s var(--spring),box-shadow .12s}
-  .knob.grab{cursor:grabbing;box-shadow:8px 10px 20px rgba(62,104,134,.42),-6px -6px 14px rgba(255,255,255,.95),inset 1px 1px 1px #fff}
-  .knob::before{content:"";position:absolute;inset:8px;border-radius:50%;
-    background:repeating-conic-gradient(rgba(62,104,134,.20) 0 1.4deg,transparent 1.4deg 6deg);
-    -webkit-mask:radial-gradient(circle,transparent 62%,#000 63%);mask:radial-gradient(circle,transparent 62%,#000 63%)}
-  .knob::after{content:"";position:absolute;left:50%;top:10px;width:6px;height:24px;margin-left:-3px;border-radius:3px;background:var(--red);
-    box-shadow:0 0 0 1.5px rgba(255,255,255,.9)}
-  .act .knob{width:120px;height:120px;margin:-60px 0 0 -60px}
-  .reg .knob{width:124px;height:124px;margin:-62px 0 0 -62px}
+  .act .knob{width:112px;height:112px;margin:-56px 0 0 -56px}
+  .reg .knob{width:94px;height:94px;margin:-47px 0 0 -47px}
+  .knob.grab{cursor:grabbing;box-shadow:0 0 0 1.5px #aeb5b9,4px 7px 12px rgba(0,0,0,.65),inset 0 1px 2px rgba(255,255,255,.25)}
+  .knob::before{content:"";position:absolute;inset:4px;border-radius:50%;
+    background:repeating-conic-gradient(rgba(255,255,255,.17) 0 2deg,transparent 2deg 7.5deg);
+    -webkit-mask:radial-gradient(circle,transparent 76%,#000 77%);mask:radial-gradient(circle,transparent 76%,#000 77%)}
+  .knob::after{content:"";position:absolute;left:50%;top:10px;width:5px;height:24px;margin-left:-2.5px;border-radius:3px;background:#f6edd0;box-shadow:0 0 0 1px rgba(0,0,0,.55)}
+  .reg .knob::after{top:8px;height:19px}
 
-  /* ring buoy bezel: red and white */
-  .buoy{position:absolute;left:50%;top:50%;width:170px;height:170px;margin:-85px 0 0 -85px;border-radius:50%;
-    background:
-      radial-gradient(circle at 30% 24%,rgba(255,255,255,.45),transparent 46%),
-      repeating-conic-gradient(from 22.5deg,#fff 0 45deg,var(--red) 45deg 90deg);
-    box-shadow:10px 14px 24px rgba(62,104,134,.42),-8px -8px 18px rgba(255,255,255,.9)}
-  .socket{position:absolute;left:50%;top:50%;border-radius:50%;background:var(--recess);
-    box-shadow:inset 5px 6px 12px rgba(62,104,134,.42),inset -5px -5px 10px rgba(255,255,255,.95)}
-  .act .socket{width:138px;height:138px;margin:-69px 0 0 -69px}
-  .reg .socket{width:146px;height:146px;margin:-73px 0 0 -73px}
+  .dlab{position:absolute;left:50%;top:50%;transform-origin:0 0;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ivory);
+    text-shadow:0 1px 2px rgba(0,0,0,.8);transform:rotate(var(--a)) translateY(calc(var(--lr) * -1)) rotate(calc(var(--a) * -1)) translate(-50%,-50%);
+    padding:8px 6px;cursor:pointer;transition:color .15s,text-shadow .15s}
+  .dlab.on{color:var(--amber);text-shadow:0 0 9px rgba(255,184,77,.8),0 1px 2px rgba(0,0,0,.8)}
+  .atick{position:absolute;left:50%;top:50%;width:2.5px;height:9px;margin-left:-1.25px;background:#e3d6ac;transform-origin:50% 0;border-radius:1px;box-shadow:0 1px 1px rgba(0,0,0,.7);
+    transform:rotate(var(--a)) translateY(-94px) }
+  .rtick{position:absolute;left:50%;top:50%;width:2px;height:8px;margin-left:-1px;background:#cdbf93;transform-origin:50% 0;
+    transform:rotate(var(--a)) translateY(-90px);border-radius:1px;box-shadow:0 1px 1px rgba(0,0,0,.7);transition:background .15s,height .15s,box-shadow .15s}
+  .rtick.on{background:var(--amber);height:11px;box-shadow:0 0 7px rgba(255,184,77,.9)}
+  .ns{position:absolute;font-size:10.5px;font-weight:700;letter-spacing:.14em;color:var(--ivory);text-shadow:0 1px 2px rgba(0,0,0,.8);transform:translate(-50%,-50%)}
+  .read{margin-top:8px;min-width:172px;padding:9px 14px 8px;border-radius:8px;text-align:center;font-size:12.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--amber);text-shadow:0 0 7px rgba(255,184,77,.6);background:#0a0806;
+    box-shadow:inset 0 2px 6px #000,0 0 0 2px #b8932f,0 0 0 3.5px #5a430f}
 
-  .cap{position:absolute;left:50%;top:50%;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;pointer-events:none;
-    display:grid;place-items:center;font-size:12.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-    background:#f1f8fc;box-shadow:inset 3px 4px 8px rgba(62,104,134,.36),inset -3px -3px 6px rgba(255,255,255,.95)}
-  .cap.num{font-size:20px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-
-  .dlab{position:absolute;left:50%;top:50%;transform-origin:0 0;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);
-    transform:rotate(var(--a)) translateY(calc(var(--lr) * -1)) rotate(calc(var(--a) * -1)) translate(-50%,-50%);
-    padding:8px 6px;cursor:pointer;transition:color .15s}
-  .dlab.on{color:var(--red-ink)}
-  .rtick{position:absolute;left:50%;top:50%;width:2px;height:8px;margin-left:-1px;background:#7f98a8;transform-origin:50% 0;
-    transform:rotate(var(--a)) translateY(-90px);border-radius:1px;transition:background .15s,height .15s}
-  .rtick.on{background:var(--red);height:12px}
-  .ns{position:absolute;font-size:10.5px;font-weight:700;letter-spacing:.14em;color:var(--mute);transform:translate(-50%,-50%)}
-  .read{margin-top:6px;min-width:150px;padding:8px 14px 7px;border-radius:12px;text-align:center;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-    background:var(--recess);box-shadow:inset 3px 4px 8px rgba(62,104,134,.38),inset -3px -3px 7px rgba(255,255,255,.95)}
-
-  /* Comfort slider */
+  /* Comfort lever */
   .comfort{position:relative;padding:0 46px}
   .comfort .head2{display:flex;justify-content:space-between;align-items:baseline;margin:0 -46px 2px}
-  .comfort .head2 .val{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--red-ink)}
-  .slider{position:relative;height:88px;touch-action:none;cursor:pointer}
-  .rail{position:absolute;left:0;right:0;top:28px;height:12px;margin-top:-6px;border-radius:6px;background:#c3d9e7;
-    box-shadow:inset 3px 3px 6px rgba(62,104,134,.42),inset -3px -3px 6px rgba(255,255,255,.95)}
-  .stop{position:absolute;top:2px;width:2px;height:12px;margin-left:-1px;background:#5f7d8f;border-radius:1px}
-  .sthumb{position:absolute;top:28px;width:66px;height:46px;margin:-23px 0 0 -33px;border-radius:13px;cursor:grab;
-    background:linear-gradient(145deg,#f9fcfe,#d6e7f1);
-    box-shadow:8px 11px 18px rgba(62,104,134,.45),-5px -5px 12px rgba(255,255,255,.95),inset 1px 1px 0 #fff;
+  .comfort .head2 .val{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);text-shadow:0 0 7px rgba(255,184,77,.55)}
+  .slider{position:relative;height:84px;touch-action:none;cursor:pointer}
+  .rail{position:absolute;left:0;right:0;top:26px;height:14px;margin-top:-7px;border-radius:7px;background:#070605;
+    box-shadow:inset 0 3px 6px #000,0 0 0 2px #c29d3f,0 0 0 3.5px #5c430f,0 2px 0 3.5px rgba(255,235,170,.3)}
+  .stop{position:absolute;top:2px;width:2px;height:10px;margin-left:-1px;background:#cdbf93;border-radius:1px}
+  .sthumb{position:absolute;top:26px;width:64px;height:42px;margin:-21px 0 0 -32px;border-radius:12px;cursor:grab;
+    background:linear-gradient(145deg,#fdfdfd,#aab2b6 38%,#f0f3f4 58%,#7d858a);
+    box-shadow:6px 10px 16px rgba(0,0,0,.65),inset 0 1px 1px #fff,0 0 0 1px rgba(0,0,0,.35);
     transition:left .17s var(--spring),box-shadow .12s}
-  .sthumb.grab{cursor:grabbing;box-shadow:5px 7px 12px rgba(62,104,134,.42),-4px -4px 9px rgba(255,255,255,.95),inset 1px 1px 0 #fff}
-  .sthumb::before{content:"";position:absolute;left:12px;right:12px;top:10px;bottom:10px;
-    background:repeating-linear-gradient(90deg,rgba(62,104,134,.30) 0 1px,transparent 1px 5px)}
-  .sthumb::after{content:"";position:absolute;left:50%;top:7px;bottom:7px;width:4px;margin-left:-2px;border-radius:2px;background:var(--red);
-    box-shadow:0 0 0 3px #f3f9fc}
-  .slab{position:absolute;top:62px;transform:translateX(-50%);font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--mute);padding:6px;white-space:nowrap;transition:color .15s}
-  .slab.on{color:var(--ink)}
+  .sthumb.grab{cursor:grabbing;box-shadow:3px 6px 10px rgba(0,0,0,.65),inset 0 1px 1px #fff,0 0 0 1px rgba(0,0,0,.35)}
+  .sthumb::before{content:"";position:absolute;left:11px;right:11px;top:8px;bottom:8px;border-radius:3px;
+    background:repeating-linear-gradient(90deg,rgba(0,0,0,.6) 0 2px,transparent 2px 6px)}
+  .sthumb::after{content:"";position:absolute;left:50%;top:5px;bottom:5px;width:4px;margin-left:-2px;border-radius:2px;background:var(--red);box-shadow:0 0 0 2px #e9edef}
+  .slab{position:absolute;top:58px;transform:translateX(-50%);font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ivory-mute);padding:6px;white-space:nowrap;transition:color .15s;text-shadow:0 1px 2px rgba(0,0,0,.8)}
+  .slab.on{color:var(--ivory)}
 
-  /* Day switch + update button */
-  .bottom{display:grid;grid-template-columns:1fr 124px;gap:14px;align-items:center}
-  .seg{position:relative;display:grid;grid-template-columns:1fr 1fr;height:46px;border-radius:14px;padding:4px;
-    background:#c8deec;box-shadow:inset 4px 5px 10px rgba(62,104,134,.40),inset -4px -4px 9px rgba(255,255,255,.95)}
-  .seg .thumb{position:absolute;left:4px;top:4px;bottom:4px;width:calc(50% - 4px);border-radius:10px;
-    background:linear-gradient(145deg,#f9fcfe,#d9e9f3);box-shadow:4px 5px 9px rgba(62,104,134,.38),-2px -2px 6px rgba(255,255,255,.9);
-    transition:transform .2s var(--spring)}
-  .seg .thumb::after{content:"";position:absolute;left:50%;top:5px;width:14px;height:3px;margin-left:-7px;border-radius:2px;background:var(--red)}
-  .seg[data-pos="1"] .thumb{transform:translateX(100%)}
-  .seg button{position:relative;z-index:1;font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);
-    border-radius:10px;transition:color .15s;padding-top:5px}
-  .seg button[aria-checked="true"]{color:var(--ink)}
+  /* Day keys and the red update button */
+  .bottom{display:grid;grid-template-columns:1fr 128px;gap:14px;align-items:center}
+  .seg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .seg .thumb{display:none}
+  .seg button{position:relative;height:48px;border-radius:8px;padding-top:9px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#d8cba6;
+    background:linear-gradient(#3b3732,#161310);border:1px solid #5b544b;
+    box-shadow:0 4px 0 #050403,0 7px 9px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.18);transition:transform .08s,box-shadow .08s,color .15s}
+  .seg button::before{content:"";position:absolute;left:50%;top:8px;width:18px;height:3px;margin-left:-9px;border-radius:2px;background:#4a443c;transition:background .15s,box-shadow .15s}
+  .seg button[aria-checked="true"]{transform:translateY(3px);color:var(--amber);text-shadow:0 0 8px rgba(255,184,77,.7);
+    background:linear-gradient(#15120f,#26221d);box-shadow:0 1px 0 #050403,inset 0 2px 7px rgba(0,0,0,.8)}
+  .seg button[aria-checked="true"]::before{background:var(--amber);box-shadow:0 0 8px 2px rgba(255,184,77,.8)}
   .upd-wrap{display:grid;place-items:center}
-  .upd-sock{width:116px;height:116px;border-radius:50%;display:grid;place-items:center;background:var(--recess);
-    box-shadow:inset 6px 7px 14px rgba(62,104,134,.42),inset -6px -6px 12px rgba(255,255,255,.95)}
-  .upd{position:relative;width:94px;height:94px;border-radius:50%;color:#fff;display:grid;place-items:center;
-    font-size:12px;font-weight:700;letter-spacing:.2em;padding-left:.2em;
-    background:radial-gradient(circle at 34% 28%,var(--red-hi),var(--red) 52%,var(--red-dk));
-    box-shadow:7px 11px 20px rgba(120,25,18,.38),-4px -4px 10px rgba(255,255,255,.85),inset 1px 2px 2px rgba(255,255,255,.4);
+  .upd-sock{position:relative;width:122px;height:122px;border-radius:50%;display:grid;place-items:center;background:var(--chrome);
+    box-shadow:0 9px 18px rgba(0,0,0,.6),inset 0 0 0 1px rgba(0,0,0,.3)}
+  .upd-sock::before{content:"";position:absolute;inset:9px;border-radius:50%;background:#130f0b;box-shadow:inset 3px 4px 9px #000,0 0 0 1px rgba(255,255,255,.35)}
+  .upd{position:relative;width:92px;height:92px;border-radius:50%;color:#fff;display:grid;place-items:center;
+    font-size:12px;font-weight:700;letter-spacing:.2em;padding-left:.2em;text-shadow:0 1px 2px rgba(80,10,5,.7);
+    background:radial-gradient(circle at 34% 26%,var(--red-hi),var(--red) 50%,var(--red-dk));
+    box-shadow:5px 9px 16px rgba(0,0,0,.65),inset 0 2px 3px rgba(255,255,255,.45),inset 0 -5px 8px rgba(80,10,5,.45);
     transition:transform .09s ease-out,box-shadow .09s ease-out}
-  .upd.down,.upd:active{transform:translateY(3px) scale(.965);
-    box-shadow:2px 3px 6px rgba(120,25,18,.4),inset 5px 7px 12px rgba(90,10,5,.45),inset -2px -2px 6px rgba(255,170,150,.35)}
+  .upd.down,.upd:active{transform:translateY(3px) scale(.97);box-shadow:1px 3px 6px rgba(0,0,0,.65),inset 0 4px 10px rgba(60,5,2,.6),inset 0 -2px 4px rgba(255,150,130,.3)}
   .upd:focus-visible{outline-offset:7px;border-radius:50%}
-  .upd::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--red);opacity:0;pointer-events:none}
+  .upd::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--amber-soft);opacity:0;pointer-events:none}
   .upd.ping::after{animation:ping .95s ease-out}
-  @keyframes ping{from{opacity:.75;transform:scale(1)}to{opacity:0;transform:scale(1.55)}}
-  .attr{font-size:11px;line-height:1.35;color:var(--mute)}
-  .attr a{text-decoration:underline;-webkit-user-select:text;user-select:text}
+  @keyframes ping{from{opacity:.8;transform:scale(1)}to{opacity:0;transform:scale(1.6)}}
+  .attr{margin:0;font-size:11px;line-height:1.4;color:var(--ivory);text-shadow:0 1px 2px rgba(0,0,0,.75)}
+  .attr a{color:var(--amber-soft);text-decoration:underline;-webkit-user-select:text;user-select:text}
 
   @media (prefers-reduced-motion:reduce){
-    .knob,.sthumb,.seg .thumb,.needle,.g .nd{transition-duration:.01s}
+    .knob,.sthumb,.needle,.g .nd,.seg button{transition-duration:.01s}
     .upd.ping::after{animation:none}
   }
 </style>
 </head>
 <body>
+<svg class="defs" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="chrome" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fdfdfd"/><stop offset=".28" stop-color="#aab2b6"/><stop offset=".5" stop-color="#f4f6f7"/>
+      <stop offset=".75" stop-color="#7f878c"/><stop offset="1" stop-color="#e8ecee"/>
+    </linearGradient>
+    <radialGradient id="dface" cx=".4" cy=".3" r=".9">
+      <stop offset="0" stop-color="#2a2520"/><stop offset="1" stop-color="#090705"/>
+    </radialGradient>
+    <linearGradient id="glare" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".26"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>
 <div class="stage">
-<main class="console land" id="cs" aria-label="Summer Conditions Console">
+<main class="console land" id="cs" aria-label="Summer Water Conditions console">
+  <i class="screw tl"></i><i class="screw tr"></i><i class="screw bl"></i><i class="screw br"></i>
 
   <section class="speaker" aria-label="Conditions">
-    <div class="grille" aria-hidden="true"></div>
-    <article class="display" id="display">
-      <div class="d-top"><span id="dRead">Now</span><span id="dUpd"></span></div>
-      <h1 class="place" id="dPlace">Auckland</h1>
-      <p class="sub" id="dSub">Reading near Takapuna</p>
-      <div class="verdict">
-        <div class="lamps" id="lamps" role="img" aria-label="Verdict lights">
-          <span class="lamp ok" id="lOk"><i></i>Looks OK</span>
-          <span class="lamp care" id="lCare"><i></i>Take care</span>
-          <span class="lamp no" id="lNo"><i></i>Not suitable</span>
+    <div class="cluster">
+      <article class="display" id="display">
+        <div class="d-top"><span id="dRead">Now</span><span id="dUpd"></span></div>
+        <h1 class="place" id="dPlace">Auckland</h1>
+        <p class="sub" id="dSub">Reading near Takapuna</p>
+        <div class="verdict">
+          <div class="lamps" id="lamps" role="img" aria-label="Verdict lights">
+            <span class="lamp ok" id="lOk"><i></i>Looks OK</span>
+            <span class="lamp care" id="lCare"><i></i>Take care</span>
+            <span class="lamp no" id="lNo"><i></i>Not suitable</span>
+          </div>
+          <p class="head" id="dHead" aria-live="polite">Tuning in...</p>
+          <p class="win" id="dWin" aria-live="polite"></p>
         </div>
-        <p class="head" id="dHead" aria-live="polite">Tuning in...</p>
-        <p class="win" id="dWin" aria-live="polite"></p>
+        <div class="gauges" id="gauges"></div>
+        <div class="foot"><p id="fA"></p><p id="fB"></p><p id="fC"></p></div>
+      </article>
+      <div class="tuner" aria-hidden="true">
+        <div class="strip" id="strip"><div class="needle" id="needle" hidden></div></div>
+        <div class="slab-row" id="stripLab"></div>
       </div>
-      <div class="gauges" id="gauges"></div>
-      <div class="foot"><p id="fA"></p><p id="fB"></p></div>
-    </article>
-    <div class="tuner" aria-hidden="true">
-      <div class="strip" id="strip"><div class="needle" id="needle" hidden></div></div>
-      <div class="slab-row" id="stripLab"></div>
     </div>
   </section>
 
   <section class="controls">
     <header class="top">
-      <div class="brand"><span class="led" id="led"></span>conditions console<small>CC 1</small></div>
+      <div class="brand"><span class="led" id="led"></span><span class="plate">Conditions console<small>Mk I</small></span></div>
       <button class="sound" id="sound" aria-pressed="false" aria-label="Sound on">
         <svg class="on" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>
         <svg class="off" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>
@@ -265,17 +301,17 @@
       <div class="col">
         <div class="lab">Activity</div>
         <div class="dial act" id="aDial">
-          <div class="buoy"><div class="socket" style="width:138px;height:138px;margin:-69px 0 0 -69px"></div></div>
+          <div class="well"></div>
+          <div class="skirt"></div>
           <div class="knob" id="aKnob" role="slider" tabindex="0" aria-label="Activity" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0" aria-valuetext="Swim"></div>
-          <div class="cap" id="aCap" aria-hidden="true">Swim</div>
         </div>
       </div>
       <div class="col">
         <div class="lab">Region</div>
         <div class="dial reg" id="rDial">
-          <div class="socket"></div>
+          <div class="well"></div>
+          <div class="skirt"></div>
           <div class="knob" id="rKnob" role="slider" tabindex="0" aria-label="Region, north to south" aria-valuemin="0" aria-valuemax="9" aria-valuenow="1" aria-valuetext="Auckland"></div>
-          <div class="cap num" id="rCap" aria-hidden="true">2</div>
         </div>
         <div class="read" id="rRead">Auckland</div>
       </div>
@@ -301,7 +337,7 @@
       <div class="upd-wrap"><div class="upd-sock"><button class="upd" id="upd" aria-label="Update with the latest readings">UPDATE</button></div></div>
     </div>
 
-    <p class="attr">Weather and wave data from <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a>. Area readings, not beach-specific. A guide only.</p>
+    <p class="attr">Weather and wave data from <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a>. Area readings only, and a guide, not a marine forecast. Before you go, check the <a href="https://www.metservice.com/marine" target="_blank" rel="noopener">MetService marine forecast</a>.</p>
   </section>
 
 </main>
@@ -317,11 +353,14 @@
   /* ---------------------------------------------------------------
      DATA
   --------------------------------------------------------------- */
+  const KN = v => v / 1.852;                         // km/h to knots (NZ marine forecasts use knots)
   const ACTIVITIES = [
-    { id:'swim',   label:'Swim',   noun:'a swim',   water:true },
-    { id:'paddle', label:'Paddle', noun:'a paddle', water:true },
-    { id:'ride',   label:'Ride',   noun:'a ride',   water:false },
-    { id:'run',    label:'Run',    noun:'a run',    water:false }
+    { id:'swim', label:'Swim', noun:'a swim',      night:2, water:true, cold:true,  rain:true,  knots:false, vis:false },
+    { id:'surf', label:'Surf', noun:'a surf',      night:2, water:true, cold:true,  rain:true,  knots:false, vis:false,
+      light:{ head:'Very small surf right now', tom:'Very small surf tomorrow', win:'Too small for a good surf' } },
+    { id:'sail', label:'Sail', noun:'a sail',      night:1, water:true, cold:false, rain:false, knots:true,  vis:true,
+      light:{ head:'Light winds for a sail right now', tom:'Light winds tomorrow', win:'Too light for a good sail' } },
+    { id:'boat', label:'Boat', noun:'a boat trip', night:1, water:true, cold:false, rain:false, knots:true,  vis:true }
   ];
   const COMFORT = [
     { label:'Gentle', k:.75 },
@@ -342,19 +381,20 @@
     { name:'Otago',         spot:'St Clair',        lat:-45.914, lon:170.487 }
   ];
 
-  /* Rough rules of thumb, NOT official guidance. [comfortable up to, not suitable from].
-     Gusts in km/h, waves in metres. Comfort only moves the first number, so
-     the "not suitable" limits never change. */
+  /* Rough rules of thumb, NOT official guidance. [looks OK up to, not suitable from].
+     Wind and gusts in km/h, waves in metres. Comfort only moves the first number,
+     so the "not suitable" limits never change. */
   const LIMITS = {
-    swim:   { gust:[35, 55], wave:[0.8, 1.5] },
-    paddle: { gust:[25, 40], wave:[0.5, 1.0] },
-    ride:   { gust:[40, 65] },
-    run:    { gust:[50, 80] }
+    swim: { gust:[35, 55], wave:[0.8, 1.5] },
+    surf: { gust:[30, 50], wave:[1.2, 2.5] },
+    sail: { wind:[25, 40], gust:[35, 55], wave:[0.8, 1.5] },
+    boat: { gust:[30, 45], wave:[0.7, 1.5] }
   };
-  const COLD_SEA = 14;        // below this, sea temperature gets a "cold water" flag
-  const HEAT = [30, 35];      // air temperature, care / not suitable
-  const HEAVY_RAIN_HOUR = 4;  // mm in one hour
-  const RECENT_RAIN = 25;     // mm over the previous 48 hours, flags "recent heavy rain" for water activities
+  const LOW = { sail:{ key:'wind', v:8 }, surf:{ key:'wave', v:0.5 } };   // below this it is safe but not worth going
+  const VIS = [2000, 500];     // visibility in metres: take care below the first, not suitable below the second
+  const COLD_SEA = 14;         // sea temperature in degrees C
+  const HEAVY_RAIN_HOUR = 4;   // mm in one hour
+  const RECENT_RAIN = 25;      // mm over the previous 48 hours
   const UV_COVER = 3;
 
   const state = { a:0, c:1, r:1, day:0 };
@@ -401,11 +441,11 @@
       unlock: init,
       get on(){ return on; },
       set on(v){ on = v; },
-      detent(i=0){ click({f:2300 + i * 140, q:3, dur:.018, vol:.3}); tone({f:900 + i * 80, dur:.025, vol:.05}); },
-      slide(i=0){ click({f:1500 + i * 220, q:2.5, dur:.02, vol:.3}); tone({f:300 + i * 40, to:200, dur:.05, vol:.07}); },
-      flick(){ click({f:1700, q:2, dur:.014, vol:.3}); click({f:1100, q:2, dur:.02, vol:.25, at:.028}); tone({f:170, to:95, dur:.06, vol:.14}); },
-      press(){ tone({f:150, to:55, dur:.11, vol:.5}); click({f:1500, q:1.2, dur:.03, vol:.35}); },
-      release(){ click({f:2800, q:2, dur:.014, vol:.2}); tone({f:240, to:160, dur:.05, vol:.1}); },
+      detent(i=0){ click({f:2000 + i * 140, q:3, dur:.022, vol:.32}); tone({f:700 + i * 70, dur:.03, vol:.06, type:'triangle'}); },
+      slide(i=0){ click({f:1300 + i * 220, q:2.5, dur:.024, vol:.32}); tone({f:240 + i * 40, to:160, dur:.06, vol:.09}); },
+      flick(){ click({f:1500, q:2, dur:.016, vol:.34}); click({f:900, q:2, dur:.024, vol:.28, at:.03}); tone({f:150, to:80, dur:.07, vol:.16}); },
+      press(){ tone({f:140, to:50, dur:.12, vol:.55}); click({f:1300, q:1.2, dur:.035, vol:.38}); },
+      release(){ click({f:2600, q:2, dur:.016, vol:.22}); tone({f:220, to:150, dur:.055, vol:.11}); },
       ping(){ tone({f:1480, dur:.55, vol:.11}); tone({f:1480, dur:.6, vol:.045, at:.62}); }   // sonar ping
     };
   })();
@@ -441,13 +481,14 @@
   }
   function parseData(fc, mar){
     const h = fc.hourly;
-    const d = { times:h.time, gust:h.wind_gusts_10m, temp:h.temperature_2m, precip:h.precipitation,
-                code:h.weather_code, uv:h.uv_index, isDay:h.is_day, wave:null, sea:null };
+    const d = { times:h.time, gust:h.wind_gusts_10m, wind:h.wind_speed_10m || null, vis:h.visibility || null,
+                precip:h.precipitation, code:h.weather_code, uv:h.uv_index, isDay:h.is_day, wave:null, per:null, sea:null };
     if (mar && mar.hourly && Array.isArray(mar.hourly.time)){
       const idx = new Map(mar.hourly.time.map((t, i) => [t, i]));
       const pull = arr => arr ? h.time.map(t => { const i = idx.get(t); const v = i == null ? null : arr[i]; return v == null ? null : v; }) : null;
-      const w = pull(mar.hourly.wave_height), s = pull(mar.hourly.sea_surface_temperature);
+      const w = pull(mar.hourly.wave_height), p = pull(mar.hourly.wave_period), s = pull(mar.hourly.sea_surface_temperature);
       d.wave = w && w.some(v => v != null) ? w : null;
+      d.per  = p && p.some(v => v != null) ? p : null;
       d.sea  = s && s.some(v => v != null) ? s : null;
     }
     return d;
@@ -469,29 +510,36 @@
     for (let k = Math.max(0, i - 47); k <= i; k++) s += d.precip[k] || 0;
     return s;
   }
-  // level: 0 looks OK, 1 take care, 2 not suitable, null no usable reading
+  // lvl: 0 looks OK, 1 take care, 2 not suitable, null no usable reading. lt: safe but too light to be worth it
   function evaluate(d, i, act, ci){
     const th = thresholds(act.id, ci);
-    let lvl = 0, why = [], unknown = false;
+    let lvl = 0, why = [], unknown = false, lt = false;
     const add = (l, r) => { if (l > lvl){ lvl = l; why = [r]; } else if (l === lvl && l > 0 && !why.includes(r)) why.push(r); };
     const band = (v, [ok, no]) => v <= ok ? 0 : v < no ? 1 : 2;
     const c = d.code[i]; if (c != null && c >= 95) add(2, 'thunderstorm');
-    if (d.isDay[i] === 0) add(act.water ? 2 : 1, 'after dark');
-    if (act.water){
-      const w = d.wave ? d.wave[i] : null;
-      if (w == null) unknown = true; else add(band(w, th.wave), 'big waves');
-      const s = d.sea ? d.sea[i] : null;
-      if (s != null && s < COLD_SEA) add(1, 'cold water');
-      if (rain48(d, i) >= RECENT_RAIN) add(1, 'recent heavy rain');
-    } else {
-      const t = d.temp[i];
-      if (t != null){ if (t >= HEAT[1]) add(2, 'very hot'); else if (t >= HEAT[0]) add(1, 'hot'); }
+    if (d.isDay[i] === 0) add(act.night, 'after dark');
+    const w = d.wave ? d.wave[i] : null;
+    if (w == null) unknown = true; else add(band(w, th.wave), 'big waves');
+    let windLvl = 0;
+    if (th.wind){
+      const wd = d.wind ? d.wind[i] : null;
+      if (wd == null) unknown = true; else { windLvl = band(wd, th.wind); add(windLvl, 'strong wind'); }
     }
     const g = d.gust[i];
-    if (g == null) unknown = true; else add(band(g, th.gust), 'strong gusts');
+    if (g == null) unknown = true; else { const gl = band(g, th.gust); if (!th.wind || gl > windLvl) add(gl, 'strong gusts'); }
+    if (act.vis){
+      const v = d.vis ? d.vis[i] : null;
+      if (v != null){ if (v < VIS[1]) add(2, 'poor visibility'); else if (v < VIS[0]) add(1, 'poor visibility'); }
+    }
+    if (act.cold){ const s = d.sea ? d.sea[i] : null; if (s != null && s < COLD_SEA) add(1, 'cold water'); }
+    if (act.rain && rain48(d, i) >= RECENT_RAIN) add(1, 'recent heavy rain');
     const p = d.precip[i]; if (p != null && p >= HEAVY_RAIN_HOUR) add(1, 'heavy rain');
-    if (unknown && lvl === 0) return { lvl:null, why:[] };
-    return { lvl, why };
+    if (unknown && lvl === 0) return { lvl:null, why:[], lt:false };
+    if (lvl === 0 && LOW[act.id]){
+      const lo = LOW[act.id], v = lo.key === 'wind' ? (d.wind ? d.wind[i] : null) : (d.wave ? d.wave[i] : null);
+      if (v != null && v < lo.v) lt = true;
+    }
+    return { lvl, why, lt };
   }
   function dayInfo(d, offset){
     const today = nzNow().slice(0, 10);
@@ -501,7 +549,7 @@
     const idx = []; d.times.forEach((t, i) => { if (t.startsWith(date)) idx.push(i); });
     return { date, idx };
   }
-  const joinWhy = w => { const u = [...new Set(w)].slice(0, 2).join(' and '); return u; };
+  const joinWhy = w => [...new Set(w)].slice(0, 2).join(' and ');
   const topWhy = list => {
     const n = new Map(); list.forEach(x => x.why.forEach(r => n.set(r, (n.get(r) || 0) + 1)));
     return [...n.entries()].sort((a, b) => b[1] - a[1]).slice(0, 2).map(e => e[0]).join(' and ');
@@ -514,18 +562,19 @@
     if (!info) return out;
     const nowS = nzNow(), nowH = +nowS.slice(11, 13), nowM = +nowS.slice(14, 16), isToday = state.day === 0;
     out.nowH = isToday ? nowH : null; out.nowM = nowM;
-    const waveMissing = act.water && !d.wave;
+    const waveMissing = !d.wave;
     out.waveMissing = waveMissing;
     const hours = info.idx.map(i => {
       const e = evaluate(d, i, act, ci);
       const day = d.isDay[i] === 1;
-      return { i, h:+d.times[i].slice(11, 13), lvl:(waveMissing && day) ? null : e.lvl, why:e.why, day };
+      return { i, h:+d.times[i].slice(11, 13), lvl:(waveMissing && day) ? null : e.lvl, why:e.why, lt:e.lt, day };
     });
     out.hours = hours;
     const future = hours.filter(x => x.day && (!isToday || x.h >= nowH));
 
     // best window: longest run of "looks OK" daylight hours, ties go to lower UV then earlier
     let best = null, run = [];
+    const good = x => x.lvl === 0 && !x.lt;
     const flush = () => {
       if (run.length){
         const uv = run.reduce((s, x) => s + (d.uv[x.i] || 0), 0) / run.length;
@@ -535,8 +584,8 @@
       }
     };
     for (const x of future){
-      if (x.lvl === 0 && (!run.length || x.h === run[run.length - 1].h + 1)) run.push(x);
-      else { flush(); if (x.lvl === 0) run.push(x); }
+      if (good(x) && (!run.length || x.h === run[run.length - 1].h + 1)) run.push(x);
+      else { flush(); if (good(x)) run.push(x); }
     }
     flush();
     out.best = waveMissing ? null : best;
@@ -548,75 +597,87 @@
     out.read = isToday ? `Now \u00b7 ${h12(nowH)}:${String(nowM).padStart(2, '0')} ${mer(nowH)}` : `Tomorrow \u00b7 ${fmtH(focus.h)}`;
 
     const noun = act.noun;
-    const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
     if (waveMissing){
       out.head = 'No wave reading'; out.win = 'Ask a lifeguard, or check the marine forecast.'; out.lamp = null;
       return out;
     }
+    const anyLight = future.some(x => x.lvl === 0 && x.lt);
+    const anyWorse = future.some(x => x.lvl === 1 || x.lvl === 2);
     if (isToday){
       if (focus.lvl === null){ out.head = 'No reading right now'; }
-      else if (focus.lvl === 0){ out.head = `Looks OK for ${noun} right now`; out.lamp = 0; }
+      else if (focus.lvl === 0){ out.head = (focus.lt && act.light) ? act.light.head : `Looks OK for ${noun} right now`; out.lamp = 0; }
       else if (focus.lvl === 1){ out.head = `Take care: ${joinWhy(focus.why)}`; out.lamp = 1; out.bad = true; }
       else { out.head = `Not suitable: ${joinWhy(focus.why)}`; out.lamp = 2; out.bad = true; }
       if (out.best) out.win = out.best.start <= nowH ? `Best window: now to ${fmtH(out.best.end)}` : `Best window: ${fmtRange(out.best.start, out.best.end)}`;
+      else if (anyLight && !anyWorse && act.light) out.win = act.light.win;
       else out.win = future.length ? 'No suitable window left today' : 'No daylight left today. Try tomorrow.';
     } else {
       const careHrs = future.filter(x => x.lvl === 1), noHrs = future.filter(x => x.lvl === 2);
       if (out.best){ out.head = `Looks OK for ${noun} tomorrow`; out.lamp = 0; out.win = `Best window: ${fmtRange(out.best.start, out.best.end)}`; }
       else if (careHrs.length){ out.head = `Take care tomorrow: ${topWhy(careHrs)}`; out.lamp = 1; out.bad = true; out.win = 'No suitable window'; }
       else if (noHrs.length){ out.head = `Not suitable tomorrow: ${topWhy(noHrs)}`; out.lamp = 2; out.bad = true; out.win = 'No suitable window'; }
+      else if (anyLight && act.light){ out.head = act.light.tom; out.lamp = 0; out.win = act.light.win; }
       else { out.head = 'No reading for tomorrow'; }
     }
     return out;
   }
 
   /* ---------------------------------------------------------------
-     GAUGES (needle instruments)
+     GAUGES (round marine instruments)
   --------------------------------------------------------------- */
   const SW = 240, A0 = -120;
-  const pt = (r, a) => [60 + r * Math.sin(a * Math.PI / 180), 58 - r * Math.cos(a * Math.PI / 180)];
+  const pt = (r, a) => [60 + r * Math.sin(a * Math.PI / 180), 60 - r * Math.cos(a * Math.PI / 180)];
   const arc = (r, a0, a1) => {
     const [x0, y0] = pt(r, a0), [x1, y1] = pt(r, a1);
     return `M${x0.toFixed(2)} ${y0.toFixed(2)}A${r} ${r} 0 ${Math.abs(a1 - a0) > 180 ? 1 : 0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
   };
   const fracAng = f => A0 + SW * clamp(f, 0, 1);
+  const ident = v => v;
 
   function gaugeDefs(act){
-    return [
-      { key:'gust', label:'Gusts', unit:'km/h', min:0, max:80, fmt:v => String(Math.round(v)) },
-      act.water ? { key:'wave', label:'Waves', unit:'m', min:0, max:3, fmt:v => v.toFixed(1) }
-                : { key:'rain', label:'Rain', unit:'mm', min:0, max:8, fmt:v => v.toFixed(1) },
-      act.water ? { key:'sea', label:'Sea temp', unit:'\u00b0C', min:10, max:26, fmt:v => String(Math.round(v)) }
-                : { key:'air', label:'Air temp', unit:'\u00b0C', min:0, max:40, fmt:v => String(Math.round(v)) },
-      { key:'uv', label:'UV', unit:'', min:0, max:12, fmt:v => String(Math.round(v)) }
-    ];
+    const gust = act.knots ? { key:'gust', label:'Gusts', unit:'kn',   min:0, max:40, conv:KN,    fmt:v => String(Math.round(v)) }
+                           : { key:'gust', label:'Gusts', unit:'km/h', min:0, max:80, conv:ident, fmt:v => String(Math.round(v)) };
+    const wind = { key:'wind', label:'Wind', unit:'kn', min:0, max:40, conv:KN, fmt:v => String(Math.round(v)) };
+    const wave = { key:'wave', label:'Waves', unit:'m', min:0, max:4, conv:ident, fmt:v => v.toFixed(1) };
+    const per  = { key:'per',  label:'Period', unit:'sec', min:0, max:20, conv:ident, fmt:v => String(Math.round(v)) };
+    const sea  = { key:'sea',  label:'Sea temp', unit:'\u00b0C', min:10, max:26, conv:ident, fmt:v => String(Math.round(v)) };
+    const uv   = { key:'uv',   label:'UV', unit:'', min:0, max:12, conv:ident, fmt:v => String(Math.round(v)) };
+    const vis  = { key:'vis',  label:'Visibility', unit:'km', min:0, max:20, conv:v => v / 1000, fmt:v => v >= 10 ? String(Math.round(v)) : v.toFixed(1) };
+    switch (act.id){
+      case 'swim': return [gust, wave, sea, uv];
+      case 'surf': return [wave, per, gust, sea];
+      case 'sail': return [wind, gust, wave, sea];
+      default:     return [gust, wave, vis, sea];
+    }
   }
-  function zonesFor(key, th){
-    switch (key){
-      case 'gust': return [{ a:th.gust[0], b:th.gust[1], t:'t' }, { a:th.gust[1], b:80, t:'s' }];
-      case 'wave': return th.wave ? [{ a:th.wave[0], b:th.wave[1], t:'t' }, { a:th.wave[1], b:3, t:'s' }] : [];
-      case 'rain': return [{ a:HEAVY_RAIN_HOUR, b:8, t:'t' }];
-      case 'sea':  return [{ a:10, b:COLD_SEA, t:'t' }];
-      case 'air':  return [{ a:HEAT[0], b:HEAT[1], t:'t' }, { a:HEAT[1], b:40, t:'s' }];
-      case 'uv':   return [{ a:UV_COVER, b:8, t:'t' }, { a:8, b:12, t:'s' }];
+  function zonesFor(def, act, th){
+    switch (def.key){
+      case 'gust': return [{ a:th.gust[0], b:th.gust[1], t:'t' }, { a:th.gust[1], b:1e6, t:'s' }];
+      case 'wind': return th.wind ? [{ a:th.wind[0], b:th.wind[1], t:'t' }, { a:th.wind[1], b:1e6, t:'s' }] : [];
+      case 'wave': return [{ a:th.wave[0], b:th.wave[1], t:'t' }, { a:th.wave[1], b:1e6, t:'s' }];
+      case 'sea':  return act.cold ? [{ a:-50, b:COLD_SEA, t:'t' }] : [];
+      case 'uv':   return [{ a:UV_COVER, b:8, t:'t' }, { a:8, b:1e6, t:'s' }];
+      case 'vis':  return [{ a:-1, b:VIS[1], t:'s' }, { a:VIS[1], b:VIS[0], t:'t' }];
     }
     return [];
   }
   function faceSVG(def, zones){
     const span = def.max - def.min;
-    let s = `<path d="${arc(44, A0, A0 + SW)}" fill="none" stroke="#b6cfdf" stroke-width="6"/>`;
+    let s = `<circle cx="60" cy="60" r="58" fill="url(#chrome)"/><circle cx="60" cy="60" r="52.5" fill="#1a1612"/><circle cx="60" cy="60" r="50" fill="url(#dface)"/>`;
     zones.forEach(z => {
-      const a = fracAng((z.a - def.min) / span), b = fracAng((z.b - def.min) / span);
-      s += `<path d="${arc(44, a, b)}" fill="none" stroke="${z.t === 's' ? '#d62f25' : 'rgba(214,47,37,.34)'}" stroke-width="6"/>`;
+      const a0 = clamp(def.conv(z.a), def.min, def.max), b0 = clamp(def.conv(z.b), def.min, def.max);
+      if (b0 <= a0) return;
+      s += `<path d="${arc(34, fracAng((a0 - def.min) / span), fracAng((b0 - def.min) / span))}" fill="none" stroke="${z.t === 's' ? '#e23b2b' : '#f0a31c'}" stroke-width="4.5"/>`;
     });
-    for (let i = 0; i <= 20; i++){
-      const a = A0 + SW * i / 20, major = i % 5 === 0;
-      const [x0, y0] = pt(major ? 31 : 34, a), [x1, y1] = pt(38, a);
-      s += `<line x1="${x0.toFixed(2)}" y1="${y0.toFixed(2)}" x2="${x1.toFixed(2)}" y2="${y1.toFixed(2)}" stroke="#4a6677" stroke-width="${major ? 1.4 : .8}" opacity="${major ? .85 : .5}"/>`;
+    for (let i = 0; i <= 24; i++){
+      const a = A0 + SW * i / 24, major = i % 6 === 0;
+      const [x0, y0] = pt(major ? 37 : 40, a), [x1, y1] = pt(44.5, a);
+      s += `<line x1="${x0.toFixed(2)}" y1="${y0.toFixed(2)}" x2="${x1.toFixed(2)}" y2="${y1.toFixed(2)}" stroke="#efe5c6" stroke-width="${major ? 1.6 : .8}" opacity="${major ? 1 : .65}"/>`;
     }
-    const [lx, ly] = pt(44, A0), [rx, ry] = pt(44, A0 + SW);
-    s += `<text x="${(lx - 1).toFixed(1)}" y="${(ly + 14).toFixed(1)}" text-anchor="middle" font-size="10.5" fill="#4a6677">${def.min}</text>`;
-    s += `<text x="${(rx + 1).toFixed(1)}" y="${(ry + 14).toFixed(1)}" text-anchor="middle" font-size="10.5" fill="#4a6677">${def.max}</text>`;
+    for (let k = 0; k <= 4; k++){
+      const v = def.min + span * k / 4, a = A0 + SW * k / 4, [x, y] = pt(25, a);
+      s += `<text x="${x.toFixed(1)}" y="${(y + 3).toFixed(1)}" text-anchor="middle" font-size="9" font-weight="600" fill="#efe5c6">${Number.isInteger(v) ? v : v.toFixed(1)}</text>`;
+    }
     return s;
   }
   const gaugeEls = [];
@@ -624,20 +685,21 @@
     const box = $('gauges');
     for (let i = 0; i < 4; i++){
       const root = document.createElement('div'); root.className = 'g';
-      root.innerHTML = `<svg viewBox="0 0 120 100" aria-hidden="true"><g class="face"></g>
-        <g class="nd" style="transform:rotate(${A0}deg)"><line x1="60" y1="66" x2="60" y2="21" stroke="#d62f25" stroke-width="2.4" stroke-linecap="round"/>
-        <circle cx="60" cy="58" r="5.6" fill="#fff" stroke="#15303f" stroke-width="1.4"/><circle cx="60" cy="58" r="2" fill="#d62f25"/></g></svg>
+      root.innerHTML = `<svg viewBox="0 0 120 120" aria-hidden="true"><g class="face"></g>
+        <g class="nd" style="transform:rotate(${A0}deg)"><path d="M60 14 L62.8 62 L60 71 L57.2 62 Z" fill="#ff4a30" stroke="#6e1108" stroke-width=".5"/>
+        <circle cx="60" cy="60" r="6" fill="url(#chrome)" stroke="#2a2018" stroke-width=".8"/><circle cx="60" cy="60" r="2.2" fill="#2a2018"/></g>
+        <ellipse cx="46" cy="33" rx="30" ry="15" fill="url(#glare)" transform="rotate(-24 60 60)"/></svg>
         <div class="gv"></div><div class="gl"></div>`;
       box.appendChild(root);
       gaugeEls.push({ root, face:root.querySelector('.face'), nd:root.querySelector('.nd'), val:root.querySelector('.gv'), lab:root.querySelector('.gl') });
     }
   })();
   const setNeedle = (g, f) => { g.nd.style.transform = `rotate(${fracAng(f)}deg)`; };
-  function paintGauges(values){          // values: array of numbers or null, or undefined to park everything
+  function paintGauges(raw){          // raw: array of raw numbers or null, or null to park everything
     const act = ACTIVITIES[state.a], th = thresholds(act.id, state.c), defs = gaugeDefs(act);
     defs.forEach((def, i) => {
-      const g = gaugeEls[i], v = values ? values[i] : null;
-      g.face.innerHTML = faceSVG(def, zonesFor(def.key, th));
+      const g = gaugeEls[i], r = raw ? raw[i] : null, v = r == null ? null : def.conv(r);
+      g.face.innerHTML = faceSVG(def, zonesFor(def, act, th));
       g.lab.textContent = def.label;
       let extra = def.unit;
       if (def.key === 'uv' && v != null && v >= UV_COVER) extra = 'cover up';
@@ -669,7 +731,8 @@
       if (!x) cls += ' un';
       else if (!x.day) cls += ' dk';
       else if (x.lvl === null) cls += ' un';
-      else cls += x.lvl === 0 ? ' ok' : x.lvl === 1 ? ' cr' : ' no';
+      else if (x.lvl === 0) cls += x.lt ? ' lt' : ' ok';
+      else cls += x.lvl === 1 ? ' cr' : ' no';
       if (an && an.nowH != null && h < an.nowH) cls += ' past';
       if (an && an.best && h >= an.best.start && h < an.best.end) cls += ' win';
       c.className = cls;
@@ -688,18 +751,28 @@
     lamps.forEach((l, i) => l.classList.toggle('on', n === i));
     $('lamps').setAttribute('aria-label', n == null ? 'No verdict' : 'Verdict: ' + LAMP_TEXT[n]);
   }
+  const RULE = {
+    swim:'Swim between the flags. Never swim alone.',
+    surf:'If in doubt, do not paddle out. Surf at a patrolled beach.',
+    sail:'Wear a lifejacket. Tell someone your plan.',
+    boat:'Wear a lifejacket. Carry two waterproof ways to call for help.'
+  };
+  const LIMITS_NOTE = {
+    swim:'Tides and rips are not shown here. Ask a lifeguard.',
+    surf:'Rips and tides are not shown here. Ask a lifeguard.',
+    sail:'Tides and local wind effects are not shown here.',
+    boat:'Tides and bars are not shown here. If in doubt, do not cross a bar.'
+  };
   function footer(act, an){
-    const A = { swim:'Swim between the flags. Never swim alone.', paddle:'Wear a lifejacket. Tell someone your plan.',
-                ride:'Helmet on. Be seen.', run:'Carry water. Be seen.' }[act.id];
-    let B = act.water ? 'Tides and rips are not shown here. Ask a lifeguard.' : 'Conditions change fast.';
-    let warn = false;
-    if (view.status === 'ok' && act.water && an && an.focus && view.data){
-      if (rain48(view.data, an.focus.i) >= RECENT_RAIN){ B = 'Heavy rain lately. Check Can I Swim Here on LAWA before you go.'; warn = true; }
-    } else if (view.status === 'ok' && !act.water && an && an.focus && view.data){
-      const uv = view.data.uv[an.focus.i];
-      if (an.focus.day && uv != null && uv >= UV_COVER) B = 'UV is up. Slip, slop, slap and wrap.';
+    let B = LIMITS_NOTE[act.id], warn = false, C = '';
+    if (view.status === 'ok' && an && an.focus && view.data){
+      const d = view.data, i = an.focus.i;
+      if (act.rain && rain48(d, i) >= RECENT_RAIN){ B = 'Heavy rain lately. Check Can I Swim Here on LAWA before you go.'; warn = true; }
+      else if (!act.cold){ const s = d.sea ? d.sea[i] : null; if (s != null && s < COLD_SEA) B = 'Cold water. Dress for the water, not the air.'; }
+      const uv = d.uv[i]; if (an.focus.day && uv != null && uv >= UV_COVER) C = 'UV is up. Slip, slop, slap and wrap.';
     }
-    $('fA').textContent = A; const fb = $('fB'); fb.textContent = B; fb.className = warn ? 'warn' : '';
+    $('fA').textContent = RULE[act.id]; const fb = $('fB'); fb.textContent = B; fb.className = warn ? 'warn' : '';
+    $('fC').textContent = C;
   }
   function render(){
     const act = ACTIVITIES[state.a], reg = REGIONS[state.r];
@@ -723,10 +796,8 @@
     setLamp(an.lamp);
     const defs = gaugeDefs(act);
     const vals = i == null ? null : defs.map(def => {
-      switch (def.key){
-        case 'gust': return d.gust[i]; case 'wave': return d.wave ? d.wave[i] : null; case 'rain': return d.precip[i];
-        case 'sea': return d.sea ? d.sea[i] : null; case 'air': return d.temp[i]; case 'uv': return d.uv[i];
-      }
+      const arr = { gust:d.gust, wind:d.wind, wave:d.wave, per:d.per, sea:d.sea, uv:d.uv, vis:d.vis }[def.key];
+      return arr ? arr[i] : null;
     });
     paintGauges(vals); paintStrip(an); footer(act, an);
   }
@@ -742,8 +813,8 @@
     view = { status:'loading' }; render(); startSeek();
     const r = REGIONS[ri];
     const q = `latitude=${r.lat}&longitude=${r.lon}&timezone=Pacific%2FAuckland`;
-    const fUrl = `https://api.open-meteo.com/v1/forecast?${q}&past_days=2&forecast_days=3&hourly=temperature_2m,precipitation,weather_code,wind_gusts_10m,uv_index,is_day`;
-    const mUrl = `https://marine-api.open-meteo.com/v1/marine?${q}&forecast_days=3&hourly=wave_height,sea_surface_temperature`;
+    const fUrl = `https://api.open-meteo.com/v1/forecast?${q}&past_days=2&forecast_days=3&hourly=precipitation,weather_code,wind_speed_10m,wind_gusts_10m,uv_index,is_day,visibility`;
+    const mUrl = `https://marine-api.open-meteo.com/v1/marine?${q}&forecast_days=3&hourly=wave_height,wave_period,sea_surface_temperature`;
     const [f, m] = await Promise.allSettled([getJSON(fUrl), getJSON(mUrl)]);
     if (seq !== loadSeq) return;                                  // a newer request has taken over
     stopSeek();
@@ -801,17 +872,18 @@
     return { apply, get:() => idx };
   }
 
-  // Activity: a ring-buoy dial with four positions
+  // Activity: a four-position selector knob
   const aAngles = [-105, -35, 35, 105];
-  const aDial = $('aDial'); aDial.style.setProperty('--lr', '109px');
+  const aDial = $('aDial'); aDial.style.setProperty('--lr', '124px');
   const aLabs = [];
   const aCtl = rotary({
     root:aDial, knob:$('aKnob'), angles:aAngles, start:state.a,
     text:i => ACTIVITIES[i].label,
-    mark:i => { $('aCap').textContent = ACTIVITIES[i].label; aLabs.forEach((l, k) => l.classList.toggle('on', k === i)); },
+    mark:i => { aLabs.forEach((l, k) => l.classList.toggle('on', k === i)); },
     sound:i => Snd.detent(i),
     onChange:i => { state.a = i; render(); }
   });
+  aAngles.forEach(a => { const t = document.createElement('i'); t.className = 'atick'; t.style.setProperty('--a', a + 'deg'); aDial.insertBefore(t, $('aKnob')); });
   ACTIVITIES.forEach((a, i) => {
     const b = document.createElement('button'); b.className = 'dlab'; b.textContent = a.label; b.tabIndex = -1;
     b.style.setProperty('--a', aAngles[i] + 'deg'); b.addEventListener('click', () => aCtl.apply(i, true, true));
@@ -819,18 +891,18 @@
   });
   aCtl.apply(state.a, false, false);
 
-  // Region: a tuning dial from north to south
+  // Region: a tuning knob from north to south
   const rAngles = REGIONS.map((_, i) => -135 + i * 30);
   const rDial = $('rDial'), rTicks = [];
   rAngles.forEach(a => { const t = document.createElement('i'); t.className = 'rtick'; t.style.setProperty('--a', a + 'deg'); rDial.insertBefore(t, $('rKnob')); rTicks.push(t); });
   [['N', -1], ['S', 1]].forEach(([t, s]) => {
     const n = document.createElement('span'); n.className = 'ns'; n.textContent = t;
-    n.style.left = `calc(50% + ${s * 74}px)`; n.style.top = 'calc(50% + 76px)'; rDial.appendChild(n);
+    n.style.left = `calc(50% + ${s * 70}px)`; n.style.top = 'calc(50% + 78px)'; rDial.appendChild(n);
   });
   const rCtl = rotary({
     root:rDial, knob:$('rKnob'), angles:rAngles, start:state.r,
     text:i => REGIONS[i].name,
-    mark:i => { $('rCap').textContent = i + 1; $('rRead').textContent = REGIONS[i].name; rTicks.forEach((t, k) => t.classList.toggle('on', k === i)); },
+    mark:i => { $('rRead').textContent = REGIONS[i].name; rTicks.forEach((t, k) => t.classList.toggle('on', k === i)); },
     sound:i => Snd.detent(i % 6),
     onChange:(i, committed) => {
       state.r = i; $('dPlace').textContent = REGIONS[i].name; $('dSub').textContent = 'Reading near ' + REGIONS[i].spot;
@@ -838,7 +910,7 @@
     }
   });
 
-  // Comfort: a three-stop slider
+  // Comfort: a three-stop lever
   (function comfortSlider(){
     const slider = $('cSlider'), rail = $('cRail'), thumb = $('cThumb'), labs = [];
     let idx = state.c, drag = false;
@@ -875,7 +947,7 @@
     set(state.c, false);
   })();
 
-  // Day: today or tomorrow
+  // Day: two push keys, today or tomorrow
   (function daySwitch(){
     const el = $('segD'), btns = [...el.querySelectorAll('button')];
     function set(i, user){
@@ -916,7 +988,7 @@
   /* ---------------------------------------------------------------
      LAYOUT: fit the whole console on desktop and iPad, either way up
   --------------------------------------------------------------- */
-  const cs = $('cs'), LAND = { w:1120, h:680 }, PORT = { w:640, h:1240 };
+  const cs = $('cs'), LAND = { w:1140, h:700 }, PORT = { w:640, h:1330 };
   function layout(){
     const vw = window.innerWidth, vh = window.innerHeight, f = .95;
     const sL = Math.min(vw * f / LAND.w, vh * f / LAND.h), sP = Math.min(vw * f / PORT.w, vh * f / PORT.h);
